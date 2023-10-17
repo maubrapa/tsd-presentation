@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Fast Traffic Sign Detection for Two-Way Roads using Detachable Onboard Cameras</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<!-- <link rel="stylesheet" href="dist/theme/black.css"> -->
+		<!-- <link rel="stylesheet" href="dist/theme/white.css"> -->
+		<link rel="stylesheet" href="dist/theme/white-contrast.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+
+		<!-- Custom stylesheet -->
+		<link rel="stylesheet" href="dist/custom.css">
+		<!-- <link rel="stylesheet" href="dist/custom2.css"> -->
+
+	</head>
+<!-- 	<style>
+		.twocolumn {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-gap: 10px;
+			text-align: left;
+		}
+	</style>
+ -->	
+ 	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<p>Fast Traffic Sign Detection for Two-Way Roads using Detachable Onboard Cameras</p>
+					<br>
+
+					<p><small>Maurı́cio B. de Paula</small></p>
+					<p><small>Cláudio R. Jung</small></p>
+
+				</section>
+				<!-- ################################################## -->
+				<section data-state="my-style">
+					<h3>Outline</h3>
+					<ul>
+						<li><cinza>Introduction</cinza></li>
+						<li><cinza>Related work</cinza></li>
+						<li>Proposed approach</li>
+						<li>Experimental results</li>
+						<li>Conclusion</li>
+					</ul>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section>
+						<h3>The proposed approach</h3>
+						<ul>
+							<li>Definition of the ROIs</li>
+							<li><font color='gray'>Lightweight CNN for TSD</font></li>
+							<li><font color='gray'>Real-Time Traffic Sign Detection</font></li>
+						</ul>
+						<aside class="notes">
+							<small>
+							<li> Lightweight Traffic Sign Detection (TSD) Approach: The text discusses a lightweight approach for detecting traffic signs using detachable cameras, particularly smartphones, placed at the top-central portion of a vehicle's windshield.</li>
+
+							<li>Road Sign Monitoring: The approach involves monitoring the road ahead, primarily focusing on the detection of vertical traffic signs.</li>
+
+							<li>Sign Placement Regulation: It mentions that the placement of traffic signs varies by country and is typically regulated by specific legislation. The specific focus of the work is on Brazilian traffic signs.</li>
+
+							<li>Region of Interest (ROI): The text talks about finding a Region of Interest (ROI) in the Image Coordinate System (ICS) based on the expected location of traffic signs in the World Coordinate System (WCS). This ROI is scanned for traffic signs.</li>
+
+							<li>Lightweight Convolutional Neural Network (CNN): The approach involves the development of a lightweight CNN for the purpose of detecting traffic signs within the defined ROI.</li>
+							</small>
+						</aside>
+					</section>
+					<section>
+						<h3>Definition of the ROIs</h3>
+						<br>
+						<img src="./imgs/posicaoVia_ipe.svg" alt="Height and lateral location of sign in rural area" style="height: 250px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+						<aside class="notes">
+							<li>Brazilian vertical traffic signs must be placed upright.</li>
+							<li>The height and lateral distance of placement depend on the type of road.</li>
+						</aside class="notes">
+					</section>
+					<section>
+						<h3>Definition of the ROIs</h3>
+						<br>
+						<img src="./imgs/worldAndCameraCoordinates.svg" alt="3D world and camera coordinate" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+						\( \mathbf{x}_w=(x,y,z)^T \color{gray}{\Longrightarrow} \mathbf{u} = (u,v)^T \color{gray}{\Longrightarrow} \mathbf{u} = {f}({x}) \)
+
+
+						<aside class="notes">
+							<li>A detachable camera is placed at the top-central portion of the windshield, monitoring the road ahead.
+							<li>we consider that there is no roll (since such movement is usually prevented by the windshield)
+							<li>we estimate the remaining parameters using the online self-calibration scheme
+							<li>With the fully calibrated camera, the next step is to identify the region in the WCS where traffic signs are expected to lie on, and then project it to the ICS using the known camera parameters.
+							<li>Extrinsic camera parameters are characterized by the camera height and the pitch \( \alpha \) , yaw \( \beta \) and roll \( \gamma \) angles. </li>
+							<li>given a 3D point xw, the corresponding pixel is defined by u = (u,v)^T is given by the perspective projection u=f(x), where f is based on the camera parameters</li>
+						</aside>
+					</section>
+					<section data-state="my-style">
+						<h3>Definition of the ROIs</h3>
+						<img src="./imgs/definicaoROI_new4.svg" alt="Region of interest in world coordinate system (left). Reprojection of the image regions (right)" style="height: 350px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+						<br>Rectangular region \( r \) in WCS: \( \mathbf{w}_z = \left( p_h + \frac{p_d}{2}, \delta_y, \delta_z \right)^T \)</br>
+						<small>
+ 						<aside class="notes">
+ 							<li> Region of interest in world coordinate system (left) </li>
+ 							<li>projection of the image regions (right)</li>
+ 							<li>In the WCS, the ROIs are rectangles orthogonal to both the ground plane and the central axis of the road.</li>
+ 							<li>We define a rectangular region r, at a distance δ z meters along the vertical axis in a birds-eye view</li>
+ 							<li>The region is defined by its width δ w (in meters) and height δ h (in meters), as well as its central position w z given by w_z = ...</li>
+ 							<li>p d and p h are the expected diameter and height</li>
+							<li>ROIs are considerably smaller than the full-frame resolution.</li>
+							<li>Present limited background variation.</li>
+							<li>Shallower (and faster) CNNs suffice for TSD.</li>
+						</aside>
+						</small>
+						
+
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section> <!-- vertical slides -->
+					<section data-state="my-style"> 
+						<h3>The proposed approach</h3>
+						<ul>
+							<li><cinza>Definition of the ROIs</cinza></li>
+							<li>Lightweight CNN for TSD</li>
+							<li><cinza>Real-Time Traffic Sign Detection</cinza></li>
+						</ul>
+					</section>
+
+					<section data-state="my-style">
+						<h3>Lightweight CNN for TSD</h3>
+						<div class="twocolumn">
+							<div>
+								<!-- <img src="imgs/scap_arch.png" alt="CropNet structure" style="width:100%"> -->
+								<img src="imgs/cropNet_structure.png" alt="CropNet structure" style="width:100%">
+							</div>
+							<div>
+								<!-- <img src="imgs/img_forest.jpg" alt="Forest" style="width:100%"> -->
+								<small>
+									<table border=1>
+										<thead>
+											<tr>
+												<th>Network</th>
+												<th>Size</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Proposed network</td>
+												<td>394Kb</td>
+											</tr>
+											<tr>
+												<td>Mobilenet-v2</td>
+												<td>14Mb</td>
+											</tr>
+											<tr>
+												<td>YOLOv4-tiny</td>
+												<td>6Mb</td>
+											</tr>
+										</tbody>
+									</table>
+								</small>
+							</div>
+						</div>
+						<img src="imgs/scap_arch.png" alt="CropNet structure" style="width:60%">
+						<aside class="notes">
+							<small>
+							<li> input resolution presented a good compromise between running time and accuracy rates for ts located at 40m from the camera
+							<li> the net has 6 convolutional and 4 maxpooling layers
+							<li> the detection head is based on anchors (Single shot multibox detector and yolo)
+							<li> Since the scale variation of the signs within the ROI is small we used a a limited nof anchors (one and three)
+							<li> The size of the proposed network is smaller than generic purpose lightweight models/backbones
+							</small>
+						</aside>
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section data-state="my-style"> 
+						<h3>The proposed approach</h3>
+						<ul>
+							<li><cinza>Definition of the ROIs</cinza></li>
+							<li><cinza>Lightweight CNN for TSD</cinza></li>
+							<li>Real-Time Traffic Sign Detection</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Real-Time Traffic Sign Detection</h3>
+						<div class="twocolumn">
+						
+								<video controls width="100%">
+									<source src="videos/detectionMode.mp4" type="video/mp4" />
+								</video>
+								<!-- <img src="imgs/crop_farfield_resized_2.png" alt="Detection mode" style="width:100%"> -->
+								<center> <small>Detection and tracking mode</small></center>
+						
+						</div>
+
+						<aside class="notes">
+							<li>Explain modes: detection vs. tracking</li>
+							<li>TS appears in the far field of the camera</li>
+							<li>If a TS is detected in a given frame, it is expected to appear in the next frames</li>
+						</aside class="notes">
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section data-state="my-style"> 
+						<h3>Experimental results</h3>
+						<ul>
+							<li>Dataset</li>
+							<li><cinza>Training details</cinza></li>
+							<li><cinza>Quantitative Evaluation</cinza></li>							
+						</ul>
+					</section>					
+					<section>
+						<h3>Our Dataset</h3>
+						<div class="twocolumn">
+							<div>
+								<h4>Training set</h4>
+								<small>
+									<table>
+										<thead>
+											<tr>
+												<th>Traffic sign</th>
+												<th>#images</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>No overtaking</td>
+												<td>939</td>
+											</tr>
+											<tr>
+												<td>Left curve</td>
+												<td>608</td>
+											</tr>
+											<tr>
+												<td>Right curve</td>
+												<td>744</td>
+											</tr>
+											<tr>
+												<td>60 km/h</td>
+												<td>189</td>
+											</tr>
+											<tr>
+												<td>80 km/h</td>
+												<td>195</td>
+											</tr>
+											<tr>
+												<td>Trucks right</td>
+												<td>167</td>
+											</tr>
+											<tr>
+												<td>Bridge ahead</td>
+												<td>102</td>
+											</tr>
+										</tbody>
+									</table>
+
+									<p>Total of 2,944 images</p>
+								</small>
+							</div>
+							<div>
+								<h4>Testing set</h4>
+								<small>
+									<ul>
+										<li>Eleven (11) full HD videos</li>
+										<li>Recorded with different placement settings.</li>
+										<li>Extrinsic params. different for each video.</li>
+										<li>Instrisic params. obteained offline.</li>
+									</ul>									
+								</small>
+							</div>
+						</div>
+						<aside class="notes">
+							(1) Although there are popular datasets for validating TSD algorithms, such as GTSDB [32], we are not aware of labeled datasets containing Brazilian traffic signs.
+							(2) We need video sequences with known intrinsic camera parameters for the test stage.
+							(3) We collected a set of images from Google Maps using street view API.
+							(4) We recorded some video sequences with different TS.
+							(5) Total of 2,944 images.
+							(6) Recorded with different placement settings when attached to the windshield.
+						</aside>
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section data-state="my-style"> 
+						<h3>Experimental results</h3>
+						<ul>
+							<li><cinza>Dataset</cinza></li>
+							<li>Training details</li>
+							<li><cinza>Quantitative Evaluation</cinza></li>							
+						</ul>
+					</section>
+					<section>
+						<h3>Training details</h3>
+						<img src="./imgs/cropped_dataset.jpg" alt="cropped training images" style="width:60%">
+						<aside class="notes">
+							(1) to produce the training scenario (similar to the ROIs) we cropped the training images around the annotade signs, randomly generating regions 3 to 5 times larger than the traffic sing.
+							(2) The system was implemented in c++, with the OpenCV and darknet/caffe frameworks.
+						</aside>
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section> 
+						<h3>Experimental results</h3>
+						<ul>
+							<li><cinza>Dataset</cinza></li>
+							<li><cinza>Training details</cinza></li>
+							<li>Quantitative Evaluation</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Quantitative Evaluation</h3>
+						<img src="./imgs/mAP.png" alt="mean average precision and processin times" style="width:100%">
+					</section>
+					<section>
+						<video controls width="100%">
+ 						<!-- <video autoplay="true"> -->
+							<source src="videos/vid5169.mp4" type="video/mp4" />
+						</video>
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<h3>Conclusion</h3>
+					<small>
+						<ul>
+							<li>Present a framework for Brazilian TSD with flexible camera setup.</li>
+							<li>Explore a calibrated camera to reduce the search area.</li>
+							<li>Reduce the background complexity.</li>
+							<li>The relative size of the TS presents small variations.</li>
+							<li>Allow the use of lightweight CNNs.
+						</ul>
+					</small>
+				</section>
+				<!-- ################################################## -->
+				<!-- ################################################## -->
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				autoPlayMedia: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
+			});
+
+			// Reveal.configure({ showNotes: true });
+
+		</script>
+	</body>
+</html>
