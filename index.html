@@ -35,59 +35,118 @@
 				<section>
 					<p>Fast Traffic Sign Detection for Two-Way Roads using Detachable Onboard Cameras</p>
 					<br>
-
-					<p><small>Maurı́cio B. de Paula &nbsp;&nbsp; and &nbsp;&nbsp; Cláudio R. Jung</small></p>
+					<p><small>Maurı́cio B. de Paula$^\ast$ &nbsp;&nbsp; and &nbsp;&nbsp; Cláudio R. Jung$^\dagger$</small></p>
+					<p style="font-size: medium;">
+						$^\ast$Mathematics and Statistics Department, Federal University of Pelotas<br>
+    					$^\dagger$Institute of Informatics, Federal University of Rio Grande do Sul
+					<p style="margin-bottom: 4cm;"></p>
+					<hr>
+					<div class="twocolumn">
+						<div><img src="./imgs/sibgrapi2023-logo.png" alt="SIBGRAPI 2023 logo" style="height: 65px; background: transparent;"></div>
+						<div><img src="./imgs/logos_v2.svg" alt="UFPEL, UFRGS logo" style="height: 70px; background: transparent;"></div>
+					</div>
+					<p class="footnote"><font color="purple">Last update: October 19th, 2023</font></p>
+					
 
 				</section>
 				<!-- ################################################## -->
 				<section data-state="my-style">
 					<h3>Outline</h3>
 					<ul>
-						<li><cinza>Introduction</cinza></li>
-						<li><cinza>Related work</cinza></li>
+						<li>Motivation</li>
+						<li>Related work</li>
 						<li>Proposed approach</li>
 						<li>Experimental results</li>
 						<li>Conclusion</li>
 					</ul>
 				</section>
 				<!-- ################################################## -->
+				<!-- <section data-state="my-style" data-background-image="./imgs/crash-sketch-2.png"> -->
+				<section data-state="my-style">
+					<h3>Motivation</h3>
+					<ul class="myli">
+						<li>Approximately 1.35 million people die each year due to road traffic injuries worldwide<sup>1</sup>.</li>
+						<li>Brazil has one of the highest rates of road traffic fatalities in the world.</li>
+						<li>In 2022, there were approximately 20,852 road traffic deaths<sup>2</sup>.</li>
+						<li>Campaigns have been carried out to reduce traffic injuries and deaths.</li>
+						<li>Many vehicles are already equipped with ADAS, the aim of which is to reduce traffic injuries and increase traffic safety.</li>
+					</ul>
+					<p class="footnote"> 
+						<sup>1</sup> World Health Organization (2018). Global status report on road safety 2018. Available at: https://www.who.int/publications/i/item/9789241565684.<br>
+						<sup>2</sup>Registro Nacional de Acidentes e Estatísticas de Trânsito. Avaiable at: https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-Senatran/registro-nacional-de-acidentes-e-estatisticas-de-transito</p>
+					<aside class="notes">
+						(1) Advanced Driver Assistance Systems (ADAS): 
+						which includes features like adaptive cruise control, lane-keeping assist, automatic emergency braking, and blind-spot monitoring. 
+						(1.1) Many ADAS features rely on traffic sign detection to provide real-time information to drivers.
+						(1.2) For example, adaptive cruise control systems can adjust a vehicle's speed based on speed limit signs, while lane-keeping assist systems can use traffic signs to understand road conditions and make necessary adjustments to the vehicle's trajectory.
+						(1.3) These systems can help drivers avoid collisions and mitigate the severity of accidents.
+						(2) Autonomous Vehicles: Self-driving cars have the potential to significantly reduce road traffic injuries by eliminating human error, which is a major cause of accidents. However, widespread adoption of this technology is still in progress and comes with its own set of challenges and safety considerations.
+						(3) Crash Avoidance Technology: Automotive companies are investing in technology designed to prevent accidents, such as pedestrian detection systems, collision avoidance systems, and vehicle-to-vehicle (V2V) communication that allows cars to communicate with each other to prevent accidents.
+					</aside>
+				</section>
+				<!-- ################################################## -->
 				<section>
-					<section>
+					<h3>Related work</h3>
+					<ul class="myli">
+						<li>Several TSD approaches are based on direct adaptations of generic-purpose object detectors.</li>
+						<li>Runtime is still a problem when using low-power hardware.</li>
+						<li>Most TSD approaches take as input the full image captured.</li>
+						<li>The methods try to detect all traffic signs, without any previous knowledge of location or scale.</li>
+						<li>Accuracy vs. Computational Demands</li>
+					</ul>
+					<aside class="notes">
+						<li>Runtime Challenges</li>
+						<li>To reach good accuracy (particularly for smaller signs), they need to work with higher input resolution and deeper networks, which leads to computationally demanding methods.</li>
+					</aside>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section data-state="my-style">
 						<h3>The proposed approach</h3>
 						<ul>
-							<li>Definition of the ROIs</li>
-							<li><font color='gray'>Lightweight CNN for TSD</font></li>
-							<li><font color='gray'>Real-Time Traffic Sign Detection</font></li>
+							<li>Main Contribution</li>
+							<li><cinza>Definition of the ROIs</cinza></li>
+							<li><cinza>Lightweight CNN for TSD</cinza></li>
+							<li><cinza>Real-Time Traffic Sign Detection</cinza></li>
 						</ul>
-						<aside class="notes">
-							<small>
-							<li> Lightweight Traffic Sign Detection (TSD) Approach: The text discusses a lightweight approach for detecting traffic signs using detachable cameras, particularly smartphones, placed at the top-central portion of a vehicle's windshield.</li>
-
-							<li>Road Sign Monitoring: The approach involves monitoring the road ahead, primarily focusing on the detection of vertical traffic signs.</li>
-
-							<li>Sign Placement Regulation: It mentions that the placement of traffic signs varies by country and is typically regulated by specific legislation. The specific focus of the work is on Brazilian traffic signs.</li>
-
-							<li>Region of Interest (ROI): The text talks about finding a Region of Interest (ROI) in the Image Coordinate System (ICS) based on the expected location of traffic signs in the World Coordinate System (WCS). This ROI is scanned for traffic signs.</li>
-
-							<li>Lightweight Convolutional Neural Network (CNN): The approach involves the development of a lightweight CNN for the purpose of detecting traffic signs within the defined ROI.</li>
-							</small>
-						</aside>
 					</section>
-					<section>
+					<section data-background-color="rgb(255,255,255)">
+						<h3>Main Contribution</h3>
+						<p style="text-align:left; font-size: x-large;";>Define a small region of interest from the full frame by using the typical vertical traffic sign positions on rural roads, enabling the development of a low-cost TSD approach.</p>
+						<figure>
+							<img src="./imgs/roi_main_contribution_annotated.png" alt="Height and lateral location of sign in rural area" style="width: 640px; background: transparent;">
+							<figcaption>Fig. 1. ROI (Region of interest)</figcaption>
+						</figure>						
+					</section>
+				</section>
+				<!-- ################################################## -->
+				<section>
+					<section data-state="my-style">
+						<h3>The proposed approach</h3>
+						<ul>
+							<li><cinza>Main Contribution</cinza></li>
+							<li>Definition of the ROIs</li>
+							<li><cinza>Lightweight CNN for TSD</cinza></li>
+							<li><cinza>Real-Time Traffic Sign Detection</cinza></li>
+						</ul>
+					</section>					
+					<section data-background-color="rgb(255,255,255)">
 						<h3>Definition of the ROIs</h3>
 						<br>
-						<img src="./imgs/posicaoVia_ipe.svg" alt="Height and lateral location of sign in rural area" style="height: 250px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+						<figure>
+						<img src="./imgs/posicaoVia_ipe.svg" alt="Height and lateral location of sign in rural area" style="height: 250px; background: transparent;">
+						<figcaption>Fig. 2. Height and lateral location of sign in rural area</figcaption>
+						</figure>
 						<aside class="notes">
 							<li>Brazilian vertical traffic signs must be placed upright.</li>
 							<li>The height and lateral distance of placement depend on the type of road.</li>
 						</aside class="notes">
 					</section>
-					<section>
+					<section data-background-color="rgb(255,255,255)">
 						<h3>Definition of the ROIs</h3>
 						<br>
 						<img src="./imgs/worldAndCameraCoordinates.svg" alt="3D world and camera coordinate" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
-						\( \mathbf{x}_w=(x,y,z)^T \color{gray}{\Longrightarrow} \mathbf{u} = (u,v)^T \color{gray}{\Longrightarrow} \mathbf{u} = {f}({x}) \)
-
+						\( \mathbf{x}_w=(x,y,z)^T \color{gray}{\Longrightarrow} \mathbf{u}= {f}(\mathbf{x}_w) \color{gray}{\Longrightarrow} \mathbf{u}=(u,v)^T  \)
 
 						<aside class="notes">
 							<li>A detachable camera is placed at the top-central portion of the windshield, monitoring the road ahead.
@@ -98,10 +157,18 @@
 							<li>given a 3D point xw, the corresponding pixel is defined by u = (u,v)^T is given by the perspective projection u=f(x), where f is based on the camera parameters</li>
 						</aside>
 					</section>
-					<section data-state="my-style">
+					<section data-state="my-style" data-background-color="rgb(255,255,255)">
 						<h3>Definition of the ROIs</h3>
-						<img src="./imgs/definicaoROI_new4.svg" alt="Region of interest in world coordinate system (left). Reprojection of the image regions (right)" style="height: 350px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
-						<br>Rectangular region \( r \) in WCS: \( \mathbf{w}_z = \left( p_h + \frac{p_d}{2}, \delta_y, \delta_z \right)^T \)</br>
+						<img src="./imgs/definicaoROI_new4.svg" alt="Region of interest in world coordinate system (left). Reprojection of the image regions (right)" style="height: 280px; background: transparent;">
+						<p class="myli">Rectangular region \( r \) in WCS: \( \mathbf{w}_z = \left( p_h + \frac{p_d}{2}, \delta_y, \delta_z \right)^T \)</p>
+						<small>							
+							<ul>
+								<li>$p_d$ and $p_h$ are the expected diameter and height.</li>								
+								<li>$\delta_y$ is the approximate lateral distance (vehicle location $\to$ center of the sign)</li>
+								<li>$\delta_z$ is the distance from the ROI to the camera.</li>
+							</ul>
+						</small>
+						
 						<small>
  						<aside class="notes">
  							<li> Region of interest in world coordinate system (left) </li>
@@ -115,8 +182,6 @@
 							<li>Shallower (and faster) CNNs suffice for TSD.</li>
 						</aside>
 						</small>
-						
-
 					</section>
 				</section>
 				<!-- ################################################## -->
@@ -124,13 +189,14 @@
 					<section data-state="my-style"> 
 						<h3>The proposed approach</h3>
 						<ul>
+							<li><cinza>Main Contribution<cinza></li>
 							<li><cinza>Definition of the ROIs</cinza></li>
 							<li>Lightweight CNN for TSD</li>
 							<li><cinza>Real-Time Traffic Sign Detection</cinza></li>
 						</ul>
 					</section>
 
-					<section data-state="my-style">
+					<section data-state="my-style" data-background-color="rgb(255,255,255)">
 						<h3>Lightweight CNN for TSD</h3>
 						<div class="twocolumn">
 							<div>
@@ -182,23 +248,19 @@
 					<section data-state="my-style"> 
 						<h3>The proposed approach</h3>
 						<ul>
+							<li><cinza>Main Contribution</cinza></li>
 							<li><cinza>Definition of the ROIs</cinza></li>
 							<li><cinza>Lightweight CNN for TSD</cinza></li>
 							<li>Real-Time Traffic Sign Detection</li>
 						</ul>
 					</section>
-					<section>
-						<h3>Real-Time Traffic Sign Detection</h3>
-						<!-- <div class="twocolumn"> -->
-						
+					<section data-background-color="rgb(255,255,255)">
+						<h3>Real-Time Traffic Sign Detection</h3>						
 								<video controls width="100%">
 									<source src="videos/detectionMode.mp4" type="video/mp4" />
 								</video>
 								<!-- <img src="imgs/crop_farfield_resized_2.png" alt="Detection mode" style="width:100%"> -->
 								<center> <small>Detection and tracking mode</small></center>
-						
-						<!-- </div> -->
-
 						<aside class="notes">
 							<li>Explain modes: detection vs. tracking</li>
 							<li>TS appears in the far field of the camera</li>
@@ -285,18 +347,7 @@
 							(6) Recorded with different placement settings when attached to the windshield.
 						</aside>
 					</section>
-				</section>
-				<!-- ################################################## -->
-				<section>
-					<section data-state="my-style"> 
-						<h3>Experimental results</h3>
-						<ul>
-							<li><cinza>Dataset</cinza></li>
-							<li>Training details</li>
-							<li><cinza>Quantitative Evaluation</cinza></li>							
-						</ul>
-					</section>
-					<section>
+					<section data-background-color="rgb(255,255,255)">
 						<h3>Training details</h3>
 						<img src="./imgs/cropped_dataset.jpg" alt="cropped training images" style="width:60%">
 						<aside class="notes">
@@ -304,18 +355,7 @@
 							(2) The system was implemented in c++, with the OpenCV and darknet/caffe frameworks.
 						</aside>
 					</section>
-				</section>
-				<!-- ################################################## -->
-				<section>
-					<section> 
-						<h3>Experimental results</h3>
-						<ul>
-							<li><cinza>Dataset</cinza></li>
-							<li><cinza>Training details</cinza></li>
-							<li>Quantitative Evaluation</li>
-						</ul>
-					</section>
-					<section>
+					<section data-background-color="rgb(255,255,255)">
 						<h3>Quantitative Evaluation</h3>
 						<img src="./imgs/mAP.png" alt="mean average precision and processin times" style="width:100%">
 					</section>
@@ -331,11 +371,11 @@
 					<h3>Conclusion</h3>
 					<small>
 						<ul>
-							<li>Present a framework for Brazilian TSD with flexible camera setup.</li>
-							<li>Explore a calibrated camera to reduce the search area.</li>
-							<li>Reduce the background complexity.</li>
-							<li>The relative size of the TS presents small variations.</li>
-							<li>Allow the use of lightweight CNNs.
+							<li>Presented a framework for Brazilian TSD with flexible camera setup.</li>
+							<li>Explored a calibrated camera to reduce the search area.</li>
+							<li>Reduced the background complexity.</li>
+							<li>The relative size of the TS presented small variations.</li>
+							<li>Allowed the use of lightweight CNNs.
 						</ul>
 					</small>
 				</section>
@@ -358,9 +398,17 @@
 				hash: true,
 				slideNumber: true,
 				autoPlayMedia: true,
+				// Parallax background image
+				parallaxBackgroundImage: './imgs/bridge_1440_v3.png', 
+				// e.g. "https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg"
+				// parallaxBackgroundHorizontal: 200,
+				// parallaxBackgroundVertical: 50,
+
 
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealZoom, RevealMarkdown, RevealHighlight, RevealNotes, RevealMath ]
+
+
 			});
 
 			// Reveal.configure({ showNotes: true });
