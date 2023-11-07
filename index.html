@@ -356,21 +356,41 @@
 					</section>
 					<section data-background-color="rgb(255,255,255)">
 						<h3>Training details</h3>
-						<img src="./imgs/cropped_dataset.jpg" alt="cropped training images" style="width:60%">
+						<div class="twocolumn">
+							<div>
+								<figure>
+									<img src="./imgs/cropped_dataset.jpg" alt="cropped training images" style="width:100%">
+									<figcaption>Fig. 3. Examples of the cropped training images</figcaption>
+								</figure>
+							</div>
+							<div>
+								<br>
+								<small>
+									<ul>
+										<li>We cropped the training images around the annotade signs, randomly generating regions 3 to 5 times larger than the traffic sing.</li>
+										<li>We used photometric augmentation and 2 different kernels to emulate defocus/motion blur.</li>
+									</ul>
+								</small>
+								
+							</div>
+						</div>
+						
 						<aside class="notes">
-							(1) to produce the training scenario (similar to the ROIs) we cropped the training images around the annotade signs, randomly generating regions 3 to 5 times larger than the traffic sing.
+							<li> To produce the training scenario (similar to the ROIs) we cropped the training images around the annotade signs, randomly generating regions 3 to 5 times larger than the traffic sing.</li>
+							<li>We used photometric augmentation (hue, saturation, exposure shifts)</li>
 							(2) The system was implemented in c++, with the OpenCV and darknet/caffe frameworks.
 						</aside>
 					</section>
 					<section data-background-color="rgb(255,255,255)">
 						<h3>Quantitative Evaluation</h3>
-						<img src="./imgs/mAP.png" alt="mean average precision and processin times" style="width:100%">
+						<img src="./imgs/mAP_annotated.png" alt="mean average precision and processin times" style="width:100%">
 					</section>
 					<section>
 						<video controls width="100%">
  						<!-- <video autoplay="true"> -->
 							<source src="videos/vid5169.mp4" type="video/mp4" />
 						</video>
+						<center> <small>Since new traffic signs also appear, the detection mode is also active.</small></center>
 					</section>
 				</section>
 				<!-- ################################################## -->
